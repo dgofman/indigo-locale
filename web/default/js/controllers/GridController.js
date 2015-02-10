@@ -200,11 +200,10 @@ define([
 			createVerify();
 		});
 
-		var createDialog = createDG.init(fileMap, defKeys, function(data, path) {
+		var createDialog = createDG.init(fileMap, defKeys, filter, function(data, path) {
 			gridData = data;
 			createVerify();
 
-			filter.append($('<option selected></option>').val(path).html(path));
 			$rootScope.selectedFile = path;
 			$rootScope.$apply();
 		});

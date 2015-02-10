@@ -8,7 +8,6 @@ define([
 
 	var localization = function(params) {
 			this.initialize(params);
-			this.div.show();
 		};
 
 		localization.prototype = {
@@ -62,6 +61,7 @@ define([
 							files.push({name: arr[1], path: option.text, data: data});
 							if (++count === filters.length - 1) { //excelude all
 								self.div.show();
+								$('body .footer').show();
 								$('div.loading').hide();
 								appService.fileItems(items);
 							}

@@ -4,16 +4,25 @@ define([
 	'jquery'
 ], function($) {
 	return {
-		init: function(fileMap, defKeys, cb) {
+		init: function(fileMap, defKeys, filter, cb) {
 			var createDialog = $('#createDialog'),
 				createModalBody = createDialog.on('show.bs.modal', function() {
 					var errors = window.Localization.errors,
 						body = $(this).html(createModalBody),
 						copyFrom = body.find('.copyFrom'),
 						fileInput = body.find('.fileName');
+
+					$.each(filter.find('option'), function(index, option) {
+						if (option.value !== 'all') {
+							copyFrom.append($('<option selected></option>').val(option.value).html(option.value));
+						}
+					});
+
 					fileInput.val(copyFrom.val().split('/')[1].replace('.json', ''));
 					copyFrom.change(function() {
-						fileInput.val(this.value.split('/')[1].replace('.json', ''));
+						if (this.value !== 'none') {
+							fileInput.val(this.value.split('/')[1].replace('.json', ''));
+						}
 					});
 					body.find('.btn-primary').click(function() {
 						var language = body.find('.language').val(),
@@ -27,12 +36,17 @@ define([
 							return body.find('.error').text(errors.fileExists).show();
 						}
 
-						var data = JSON.parse(JSON.stringify(fileMap[copyFrom.val()]));
-						$.each(data, function(index, row) {
-							row['localized'] = '';
-							row['locale'] = language;
-							row['path'] = path;
-						});
+						var data = [];
+						if (copyFrom.val() !== 'none') {
+							data = JSON.parse(JSON.stringify(fileMap[copyFrom.val()]));
+							$.each(data, function(index, row) {
+								row['localized'] = '';
+								row['locale'] = language;
+								row['path'] = path;
+							});
+						}
+
+						filter.append($('<option selected></option>').val(path).html(path));
 
 						fileMap[path] = data;
 
