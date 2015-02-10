@@ -1,0 +1,17 @@
+{
+	"environment": "dev",
+
+	"server": {
+		"port": 8888,
+		"webdir": "/web"
+	},
+
+	"locales": {
+		"default": "en-us",
+		"path": "/locales"
+	},
+
+	"routers": [
+		"/routers"
+	]
+}

@@ -1,0 +1,16 @@
+{
+	"name": "indigolization",
+	"version": "0.1.0",
+	"description": "Localization tool based on indigoJS framework",
+	"main": "index.js",
+	"scripts": {
+		"start": "node ."
+	},
+	"private": true,
+	"dependencies": {
+		"indigo": "git+https://github.com/dgofman/indigo.git#master"
+	},
+	"devDependencies": {
+		"jshint": "~2.6.0"
+	}
+}
