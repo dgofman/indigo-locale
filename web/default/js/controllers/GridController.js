@@ -2,8 +2,11 @@
 
 define([
 	'jquery',
-	'angular'
-], function($) {
+	'controllers/CreateDialog',
+	'controllers/RowDialog',
+	'controllers/SaveDialog',
+	'controllers/DeleteDialog'
+], function($, createDG, rowDG, saveDG, deleteDG) {
 
 	var rootScope,
 		grid,
@@ -11,7 +14,8 @@ define([
 		fileMap = {},
 		localeMap = {},
 		defaultLocale = {},
-		defKeys,
+		defKeys = {},
+		filter = $('#filter'),
 		defaultTxt,
 		localizedTxt,
 		localizedSpan,
@@ -29,7 +33,7 @@ define([
 
 		gridData = [];
 
-		defKeys = parseGridData(locale, def);
+		parseGridData(locale, def, defKeys);
 		delete items[locale];
 
 		for (locale in items) {
@@ -39,8 +43,8 @@ define([
 		createGrid();
 	};
 
-	var parseGridData = function(locale, items) {
-		var keys = {};
+	var parseGridData = function(locale, items, keys) {
+		keys = keys || {};
 
 		for (var i = 0; i < items.length; i++) {
 			var item = items[i],
@@ -111,40 +115,10 @@ define([
 			},
 			beforeSelectRow: function(rowid, e) {
 				if (e.target.className.indexOf('del-column') !== -1) {
-					var selRow = grid.getLocalRow(rowid),
-						modal = $('#deletelDialog').modal(),
-						checkbox = modal.find('.deleteOther > input');
-					modal.find('.deleteOther').toggle(selRow.locale === defaultLocale.locale);
-
-					modal.find('.btn-primary').one('click', function() {
-						var deleteRow = function(path) {
-							var rows = fileMap[path];
-							$.each(rows, function(index, row) {
-								if (row.key === selRow.key) {
-									fileMap[path].splice(index, 1);
-									return false;
-								}
-							});
-						};
-						if (selRow.locale === defaultLocale.locale) {
-							delete defKeys[selRow.name][selRow.key];
-
-							if (checkbox.is(':checked')) {
-								$.each(fileMap, function(path) {
-									if (path.split('/')[1] === selRow.name) {
-										deleteRow(path);
-									}
-								});
-							} else {
-								deleteRow(selRow.path);
-							}
-						} else {
-							deleteRow(selRow.path);
-						}
-
-						gridData = fileMap[selRow.path];
-						createGrid(true);
-						modal.modal('hide');
+					var selRow = grid.getLocalRow(rowid);
+					deleteDG.init(fileMap, defKeys, selRow, defaultLocale, function(data) {
+						gridData = data;
+						createVerify();
 					});
 					return false;
 				}
@@ -170,6 +144,17 @@ define([
 	};
 
 	var createVerify = function() {
+		if (gridData === null) {
+			gridData = [];
+			if (filter.val() === 'all') {
+				for(var path in fileMap) {
+					gridData = gridData.concat(fileMap[path]);
+				}
+			} else {
+				gridData = gridData.concat(fileMap[filter.val()]);
+			}
+		}
+
 		createGrid(true);
 		if (grid.width() !== grid.parent().width()) {
 			createGrid();
@@ -183,31 +168,6 @@ define([
 		localizedB.text('');
 		rootScope.selectedRowId = selectedRowId = null;
 		rootScope.$apply();
-	};
-
-	var save = function(saveDialog, $http, pathKeys) {
-		var data = {},
-			filePath = pathKeys.pop(),
-			rows = fileMap[filePath];
-		$.each(rows, function(index, row) {
-			data[row.key] = row.localized;
-		});
-		saveDialog.find('.error').hide();
-		saveDialog.find('progress').val(100 / (pathKeys.length + 1));
-
-		$http.post('/localization/save', {filePath: filePath, data: data})
-			.success(function() {
-				if (pathKeys.length > 0) {
-					save(saveDialog, $http, pathKeys);
-				} else {
-					saveDialog.modal('hide');
-				}
-			})
-			.error(function(data) {
-				console.error(data);
-				saveDialog.find('.error').show().find('p').text(filePath);
-				saveDialog.find('.btn-primary').css('visibility', 'visible');
-			});
 	};
 
 	return function (appService, $rootScope, $scope, $http) {
@@ -232,109 +192,36 @@ define([
 
 		$rootScope.selectedFile = 'all';
 
-		var filter = $('#filter').change(function() {
-			gridData = [];
+		filter.change(function() {
 			$rootScope.selectedFile = this.value;
 			$rootScope.$apply();
-			if (this.value === 'all') {
-				for(var path in fileMap) {
-					gridData = gridData.concat(fileMap[path]);
-				}
-			} else {
-				gridData = gridData.concat(fileMap[this.value]);
-			}
+
+			gridData = null;
 			createVerify();
 		});
 
-		var createlDialog = $('#createlDialog'),
-			createModalBody = createlDialog.on('show.bs.modal', function() {
-				var errors = window.Localization.errors,
-					body = $(this).html(createModalBody),
-					copyFrom = body.find('.copyFrom'),
-					fileInput = body.find('.fileName');
-				fileInput.val(copyFrom.val().split('/')[1].replace('.json', ''));
-				copyFrom.change(function() {
-					fileInput.val(this.value.split('/')[1].replace('.json', ''));
-				});
-				body.find('.btn-primary').click(function() {
-					var language = body.find('.language').val(),
-						fileName = fileInput.val() + '.json',
-						fullName = language + '/' + fileName;
-					if (fileInput.val().trim() === '') {
-						return body.find('.error').text(errors.emptyFile).show();
-					}
+		var createDialog = createDG.init(fileMap, defKeys, function(data, path) {
+			gridData = data;
+			createVerify();
 
-					if (fileMap[fullName]) {
-						return body.find('.error').text(errors.fileExists).show();
-					}
+			filter.append($('<option selected></option>').val(path).html(path));
+			$rootScope.selectedFile = path;
+			$rootScope.$apply();
+		});
 
-					filter.append($('<option selected></option>').val(fullName).html(fullName));
-
-					var data = JSON.parse(JSON.stringify(fileMap[copyFrom.val()]));
-					$.each(data, function(index, row) {
-						row['localized'] = '';
-						row['locale'] = language;
-						row['path'] = fullName;
-					});
-					gridData = fileMap[fullName] = data;
-					if (!defKeys[fileName]) {
-						defKeys[fileName] = {};
-					}
-
-					createVerify();
-					createlDialog.modal('hide');
-				});
-			}).html();
-
-		$.each(createlDialog.find('.language option'), function(index, option) {
+		$.each(createDialog.find('.language option'), function(index, option) {
 			localeMap[option.value] = option.text;
 		});
 
-		var newModal = $('#newRowDialog'),
-			newModalBody = newModal.on('show.bs.modal', function() {
-				var body = $(this).html(newModalBody);
-				body.find('.btn-primary').click(function() {
-					var newKey = body.find('.langKey').val().trim(),
-						fileName = filter.val(),
-						rows = fileMap[fileName],
-						arr1 = fileName.split('/');
-					for (var i = 0; i < rows.length; i++) {
-						if (rows[i].key === newKey) {
-							body.find('.error').show();
-							return;
-						}
-					}
+		rowDG.init(fileMap, defKeys, filter, function(data) {
+			gridData = data;
+			createVerify();
+		});
 
-					$.each(fileMap, function(fileName, rows) {
-						var arr2 = fileName.split('/');
-						if (arr1[1] === arr2[1]) {
-							rows.splice(0, 0, { 'key': newKey, 'path': fileName, 'name': arr2[1], 'locale': arr2[0] });
-						}
-					});
-
-					if (defKeys[arr1[1]]) {
-						defKeys[arr1[1]][newKey] = '';
-					}
-
-					gridData = rows;
-					createGrid(true);
-
-					newModal.modal('hide');
-				});
-			}).html();
+		saveDG.init(fileMap, $http, function() {
+		});
 
 		createGrid();
-
-		var saveDialog = $('#saveDialog').on('show.bs.modal', function() {
-			saveDialog.find('.btn-primary').css('visibility', 'hidden');
-			saveDialog.find('progress').val(0);
-
-			var pathKeys = [];
-			$.each(fileMap, function(filePath) {
-				pathKeys.push(filePath);
-			});
-			save(saveDialog, $http, pathKeys);
-		});
 
 		var win = $(window).bind('resize', function() {
 			if (grid.parent().width() === 0) {
