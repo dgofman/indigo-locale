@@ -27,3 +27,12 @@ require('indigojs').start(__dirname + '/config/app.json', function() {
 });
 
 ```
+
+###### Launch and open module
+
+```
+npm start
+
+http://localhost:8125/indigo-locale/en/index
+
+```

@@ -5,7 +5,7 @@ var fs = require('fs'),
 	locales = indigo.libs('locales'),
 	langcode = indigo.libs('locales/langcode.json');
 
-module.exports = function(router) {
+module.exports = function(router, locales) {
 
 	var sortLangCode = [];
 	for (var code in langcode) {
@@ -22,7 +22,7 @@ module.exports = function(router) {
 		req.model.filters = fileList();
 		req.model.langcode = sortLangCode;
 
-		indigo.render(req, res, '/index');
+		indigo.render(req, res, '/index', locales.init(req));
 	});
 
 	router.post('/file', function(req, res) {

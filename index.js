@@ -3,7 +3,7 @@
 var indigo = global.__indigo,
 	express = require('express');
 
-global.__routerBase = '/indigolization';
+global.__routerBase = '/indigo-locale';
 
 if (!indigo) {
 	indigo = require('indigojs');
@@ -15,7 +15,10 @@ module.exports = {
 		var appconf = indigo.getAppConf(__dirname + '/config/app.json');
 		appconf.server.moduleDir = '/node_modules/indigo-locale';
 
+		var locales = require('indigojs').libs('locales');
+		locales.config(appconf);
+
 		indigo.app.use(__routerBase, express.static(__dirname + appconf.get('server:webdir')));
-		indigo.libs('routers').init(appconf);
+		indigo.libs('routers').init(appconf, null, null, locales);
 	}
 };
