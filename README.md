@@ -7,7 +7,7 @@
 
 ```
 "devDependencies": {
-	"indigolization": "git://github.com/dgofman/indigolization.git#master"
+	"indigo-locale": "git://github.com/dgofman/indigo-locale.git#master"
 }
 
 ```
