@@ -17,7 +17,7 @@ define([
 		saveDialog.find('.error').hide();
 		saveDialog.find('progress').val(100 / (pathKeys.length + 1));
 
-		http.post('/indigolization/save', {filePath: filePath, data: data})
+		http.post(window.Localization.base + '/save', {filePath: filePath, data: data})
 			.success(function() {
 				if (pathKeys.length > 0) {
 					save(fileMap, http, cb);

@@ -71,7 +71,7 @@ define([
 			},
 
 			loadFile: function($http, path, cb) {
-				$http.post('/indigolization/file', {path: path})
+				$http.post(window.Localization.base + '/file', {path: path})
 					.success(function(data) {
 						cb(data);
 					})
