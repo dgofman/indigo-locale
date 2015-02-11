@@ -1,22 +1,17 @@
 'use strict';
 
-var indigolization,
-	express = require('express'),
-	indigo = require('indigojs');
+var indigo = global.__indigo,
+	express = require('express');
 
-if (!indigo.appconf) {
+if (!indigo) {
+	indigo = require('indigojs');
 	indigo.start(__appDir + '/config/app.json');
 }
 
-module.exports = indigolization = {
+module.exports = {
 	init: function() {
 		var appconf = indigo.getAppConf(__dirname + '/config/app.json');
-
-		for (var i in appconf.routers) {
-			appconf.routers[i] = appconf.routers[i];
-		}
-
-		indigo.app.use('/indigolization', express.static(__dirname + appconf.get('server:web')));
+		indigo.app.use('/indigolization', express.static(__dirname + appconf.get('server:webdir')));
 		indigo.libs('routers').init(indigo.app, appconf, indigo.libs('reqmodel'));
 	}
 };
