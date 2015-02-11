@@ -3,8 +3,7 @@
 
 	"server": {
 		"port": 8125,
-		"webdir": "/web",
-		"moduleDir": "/node_modules/indigolization"
+		"webdir": "/web"
 	},
 
 	"locales": {
