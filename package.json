@@ -1,16 +1,33 @@
 {
-	"name": "indigolization",
-	"version": "0.1.0",
-	"description": "Localization tool based on indigoJS framework",
-	"main": "index.js",
-	"scripts": {
-		"start": "node ."
-	},
-	"private": true,
-	"dependencies": {
-		"indigo": "git+https://github.com/dgofman/indigo.git#master"
-	},
-	"devDependencies": {
-		"jshint": "~2.6.0"
-	}
+  "name": "indigolization",
+  "version": "0.1.0",
+  "description": "Localization tool based on indigoJS framework",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "indigo": "git://github.com/dgofman/indigojs.git#master",
+    "express": "~4.11.0"
+  },
+  "devDependencies": {
+    "jshint": "~2.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dgofman/indigolization.git"
+  },
+  "keywords": [
+    "indigojs",
+    "localization",
+    "locale",
+    "node",
+    "npm"
+  ],
+  "author": "David Gofman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dgofman/indigolization/issues"
+  },
+  "homepage": "https://github.com/dgofman/indigolization"
 }
