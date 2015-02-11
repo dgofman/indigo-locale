@@ -14,6 +14,6 @@ module.exports = {
 		appconf.server.moduleDir = '/node_modules/indigolization';
 
 		indigo.app.use('/indigolization', express.static(__dirname + appconf.get('server:webdir')));
-		indigo.libs('routers').init(indigo.app, appconf, indigo.libs('reqmodel'));
+		indigo.libs('routers').init(appconf);
 	}
 };

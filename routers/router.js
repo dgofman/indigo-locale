@@ -1,6 +1,6 @@
 'use strict';
 
-var indigo = require('indigojs'),
+var indigo = global.__indigo,
 	debug = indigo.debug('indigo:localization');
 
 module.exports = function(router) {

@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs'),
-	indigo = require('indigojs'),
+	indigo = global.__indigo,
 	debug = indigo.debug('indigo:localization');
 
 module.exports = function(router) {

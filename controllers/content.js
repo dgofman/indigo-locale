@@ -1,7 +1,7 @@
 'use strict';
 
 var fs = require('fs'),
-	indigo = require('indigojs'),
+	indigo = global.__indigo,
 	locales = indigo.libs('locales'),
 	langcode = indigo.libs('locales/langcode.json');
 

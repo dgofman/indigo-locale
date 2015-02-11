@@ -7,10 +7,15 @@
 
 ```
 "devDependencies": {
-	"indigolization": "git+https://github.com/dgofman/indigolization.git#master"
+	"indigolization": "git://github.com/dgofman/indigolization.git#master"
 }
 
 ```
 
+###### Run command
 
+```
+npm install
+
+```
 
