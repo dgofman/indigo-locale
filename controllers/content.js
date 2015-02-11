@@ -22,7 +22,7 @@ module.exports = function(router, locales) {
 		req.model.filters = fileList();
 		req.model.langcode = sortLangCode;
 
-		indigo.render(req, res, '/index', locales.init(req), req.params.locale);
+		indigo.render(req, res, '/index', locales.init(req, req.params.locale));
 	});
 
 	router.post('/file', function(req, res) {
