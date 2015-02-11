@@ -1,7 +1,7 @@
 [![Indigo Logo](http://www.indigojs.com/img/smallogo.png)](http://indigojs.com/)
 
 
-###Getting started
+### Getting started
 
 ###### Add or update package.json
 
@@ -19,3 +19,11 @@ npm install
 
 ```
 
+###### Include and initialize a module
+
+```
+require('indigojs').start(__dirname + '/config/app.json', function() {
+	require('indigo-locale').init();
+});
+
+```

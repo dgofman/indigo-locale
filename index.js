@@ -13,7 +13,7 @@ if (!indigo) {
 module.exports = {
 	init: function() {
 		var appconf = indigo.getAppConf(__dirname + '/config/app.json');
-		appconf.server.moduleDir = '/node_modules/indigolization';
+		appconf.server.moduleDir = '/node_modules/indigo-locale';
 
 		indigo.app.use(__routerBase, express.static(__dirname + appconf.get('server:webdir')));
 		indigo.libs('routers').init(appconf);
