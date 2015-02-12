@@ -11,7 +11,7 @@ module.exports = function(router) {
 	});
 
 	return {
-		'base': __routerBase,
+		'base': global.__routerBase,
 		'intercept': function(req, res, next) {
 			if (req.headers.accept.indexOf('text/xml') === -1) {
 				next();

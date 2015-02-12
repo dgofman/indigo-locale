@@ -2,7 +2,6 @@
 
 var fs = require('fs'),
 	indigo = global.__indigo,
-	locales = indigo.libs('locales'),
 	langcode = indigo.libs('locales/langcode.json');
 
 module.exports = function(router, locales) {
@@ -18,7 +17,7 @@ module.exports = function(router, locales) {
 	});
 
 	router.get('/:locale/index', function(req, res) {
-		req.model.defaultLocale = locales.defLocale;
+		req.model.defaultLocale = indigo.locales.defLocale;
 		req.model.filters = fileList();
 		req.model.langcode = sortLangCode;
 
