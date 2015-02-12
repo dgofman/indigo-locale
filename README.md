@@ -14,7 +14,6 @@
 "devDependencies": {
 	"indigo-locale": "~0.1.3"
 }
-
 ```
 
 ###### Include module into /config/app.json
@@ -23,26 +22,24 @@
 "modules": [
 	"indigo-locale"
 ]
-
 ```
 
 ###### Download and install module
 
 ```
 npm install
-
 ```
 
 ###### Launch your application
 
 ```
 npm start
-
 ```
 
 ###### Use module URI: /indigo-locale/index
 
 ```
-http://localhost:8125/indigo-locale/index
+Example:
 
+http://localhost:8125/indigo-locale/index
 ```
