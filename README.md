@@ -3,6 +3,13 @@
 
 ### Getting started
 
+###### Download IndigoJS and create a project
+
+```
+https://github.com/dgofman/indigojs
+
+```
+
 ###### Add or update package.json
 
 ```
