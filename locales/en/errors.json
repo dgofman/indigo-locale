@@ -2,5 +2,6 @@
     "duplicateKey": "The Language Key already defined.",
     "emptyFile": "Please provide a file name.",
     "errorSaveFile": "Cannot save or create file(s).",
-    "fileExists": "The file already exists."
+    "fileExists": "The file already exists.",
+    "keyDeleted": "The key was deleted from the default locale."
 }

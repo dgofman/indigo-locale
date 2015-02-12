@@ -26,8 +26,10 @@ module.exports = function(router, locales) {
 
 	router.post('/file', function(req, res) {
 		var localeDir = __appDir + indigo.appconf.get('locales:path'),
-			file = require(localeDir + '/' + req.body.path);
-		res.json(file);
+			filePath = localeDir + '/' + req.body.path;
+
+		delete require.cache[require.resolve(filePath)];
+		res.json(require(filePath));
 	});
 };
 

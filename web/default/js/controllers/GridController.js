@@ -73,7 +73,7 @@ define([
 
 		$.each(gridData, function(index, row) {
 			row.id = index + 1;
-			if (defKeys[row.name][row.key] === undefined) {
+			if (defKeys[row.name] && defKeys[row.name][row.key] === undefined) {
 				deletedRows.push(row.id);
 			}
 		});
@@ -106,7 +106,11 @@ define([
 			},
 			onSelectRow: function(rowid){
 				var row = grid.getLocalRow(rowid);
-				defaultTxt.val(defKeys[row.name][row.key]);
+				if (defKeys[row.name]) {
+					defaultTxt.val(defKeys[row.name][row.key]);
+				} else {
+					defaultTxt.val('');
+				}
 				localizedTxt.val(row.localized);
 				rootScope.selectedRowId = selectedRowId = rowid;
 				rootScope.$apply();
@@ -117,7 +121,9 @@ define([
 			gridComplete: function () {
 				var table = $(this);
 				for (var i = 0; i < deletedRows.length; i++) {
-					table.find('#' + deletedRows[i] + ' td').css('background-color', 'rgb(252, 196, 196)');
+					table.find('#' + deletedRows[i] + ' td')
+						.attr('title', window.Localization.errors.keyDeleted)
+						.css('background-color', 'rgb(252, 196, 196)');
 				}
 			}
 		});
@@ -197,7 +203,7 @@ define([
 				if (selectedRowId !== null) {
 					var row = grid.getLocalRow(selectedRowId);
 					grid.setCell(selectedRowId, 'localized', this.value);
-					if (defaultLocale.locale === row.locale) {
+					if (defaultLocale.locale === row.locale && defKeys[row.name]) {
 						defKeys[row.name][row.key] = this.value;
 						defaultTxt.val(this.value);
 					}
