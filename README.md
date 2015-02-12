@@ -10,36 +10,41 @@ https://github.com/dgofman/indigojs
 
 ```
 
-###### Add or update package.json
+###### Update package.json
 
 ```
 "devDependencies": {
-	"indigo-locale": "git://github.com/dgofman/indigo-locale.git#master"
+	"indigo-locale": "~0.1.3"
 }
 
 ```
 
-###### Run command
+###### Include module into /config/app.json
+
+```
+"modules": [
+	"indigo-locale"
+]
+
+```
+
+###### Download and install module
 
 ```
 npm install
 
 ```
 
-###### Include and initialize a module
-
-```
-require('indigojs').start(__dirname + '/config/app.json', function() {
-	require('indigo-locale').init();
-});
-
-```
-
-###### Launch and open module
+###### Launch your application
 
 ```
 npm start
 
-http://localhost:8125/indigo-locale/en/index
+```
+
+###### Use module URI: /indigo-locale/index
+
+```
+http://localhost:8125/indigo-locale/index
 
 ```
