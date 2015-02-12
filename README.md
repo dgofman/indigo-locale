@@ -43,3 +43,5 @@ Example:
 
 http://localhost:8125/indigo-locale/index
 ```
+
+![Screenshot](https://github.com/dgofman/indigo-locale/blob/master/web/images/screenshot.png)
