@@ -5,10 +5,8 @@
 
 ###### Download IndigoJS and create a project
 
-```
-https://github.com/dgofman/indigojs
+[https://github.com/dgofman/indigojs](https://github.com/dgofman/indigojs)
 
-```
 
 ###### Update package.json
 
