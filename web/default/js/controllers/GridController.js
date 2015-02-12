@@ -12,36 +12,16 @@ define([
 		grid,
 		gridData = [],
 		fileMap = {},
-		localeMap = {},
 		defaultLocale = {},
 		defKeys = {},
 		filter = $('#filter'),
+		localeMap,
 		defaultTxt,
 		localizedTxt,
 		localizedSpan,
 		localizedB,
 		parentdWidth = 0,
 		selectedRowId = null;
-
-	var fileLoadedHandler = function(evt, items) {
-		var locale = window.Localization.defaultLocale,
-			def = items[locale] || items[locale = locale.split('-')[0]];
-
-		defaultLocale = {'key': locale.toUpperCase(), 'name': localeMap[locale], 'locale': locale};
-
-		rootScope.defaultLocale = defaultLocale;
-
-		gridData = [];
-
-		parseGridData(locale, def, defKeys);
-		delete items[locale];
-
-		for (locale in items) {
-			parseGridData(locale, items[locale]);
-		}
-
-		createGrid();
-	};
 
 	var parseGridData = function(locale, items, keys) {
 		keys = keys || {};
@@ -170,64 +150,95 @@ define([
 		rootScope.$apply();
 	};
 
-	return function (appService, $rootScope, $scope, $http) {
-		rootScope = $rootScope;
-		$scope.$on('FILE_LOADED_EVENT', fileLoadedHandler);
+	var getlocaleMap = function() {
+		if (!localeMap) {
+			localeMap = {};
+			$.each($('#createDialog .language option'), function(index, option) {
+				localeMap[option.value] = option.text;
+			});
+		}
+		return localeMap;
+	};
 
-		defaultTxt = $('.default');
-		localizedTxt = $('.localized');
-		localizedSpan = $('.columnLeft>.localized>span');
-		localizedB = $('.columnLeft>.localized>b');
+	return {
+		fileItems: function(rootScope, items) {
+			var locale = window.Localization.defaultLocale,
+				def = items[locale] || items[locale = locale.split('-')[0]] || [];
 
-		localizedTxt.keyup(function() {
-			if (selectedRowId !== null) {
-				var row = grid.getLocalRow(selectedRowId);
-				grid.setCell(selectedRowId, 'localized', this.value);
-				if (defaultLocale.locale === row.locale) {
-					defKeys[row.name][row.key] = this.value;
-					defaultTxt.val(this.value);
+			getlocaleMap();
+
+			defaultLocale = {'key': locale.toUpperCase(), 'name': localeMap[locale], 'locale': locale};
+
+			rootScope.defaultLocale = defaultLocale;
+
+			gridData = [];
+
+			parseGridData(locale, def, defKeys);
+			delete items[locale];
+
+			for (locale in items) {
+				parseGridData(locale, items[locale]);
+			}
+
+			createGrid();
+		},
+
+		init: function ($rootScope, $http) {
+			rootScope = $rootScope;
+
+			defaultTxt = $('.default');
+			localizedTxt = $('.localized');
+			localizedSpan = $('.columnLeft>.localized>span');
+			localizedB = $('.columnLeft>.localized>b');
+
+			getlocaleMap();
+
+			localizedTxt.keyup(function() {
+				if (selectedRowId !== null) {
+					var row = grid.getLocalRow(selectedRowId);
+					grid.setCell(selectedRowId, 'localized', this.value);
+					if (defaultLocale.locale === row.locale) {
+						defKeys[row.name][row.key] = this.value;
+						defaultTxt.val(this.value);
+					}
 				}
-			}
-		});
+			});
 
-		$rootScope.selectedFile = 'all';
+			$rootScope.selectedFile = 'all';
 
-		filter.change(function() {
-			$rootScope.selectedFile = this.value;
-			$rootScope.$apply();
+			filter.change(function() {
+				$rootScope.selectedFile = this.value;
+				$rootScope.$apply();
 
-			gridData = null;
-			createVerify();
-		});
+				gridData = null;
+				createVerify();
+			});
 
-		var createDialog = createDG.init(fileMap, defKeys, filter, function(data, path) {
-			gridData = data;
-			createVerify();
+			createDG.init(fileMap, defKeys, filter, function(data, path) {
+				gridData = data;
+				createVerify();
 
-			$rootScope.selectedFile = path;
-			$rootScope.$apply();
-		});
+				$rootScope.selectedFile = path;
+				$rootScope.$apply();
+			});
 
-		$.each(createDialog.find('.language option'), function(index, option) {
-			localeMap[option.value] = option.text;
-		});
+			rowDG.init(fileMap, defKeys, filter, function(data) {
+				gridData = data;
+				createVerify();
+			});
 
-		rowDG.init(fileMap, defKeys, filter, function(data) {
-			gridData = data;
-			createVerify();
-		});
+			saveDG.init(fileMap, $http, function() {
+			});
 
-		saveDG.init(fileMap, $http, function() {
-		});
+			createGrid();
 
-		createGrid();
-
-		var win = $(window).bind('resize', function() {
-			if (grid.parent().width() === 0) {
-				setTimeout(function() { win.trigger('resize'); }, 100);
-			} else if (grid.parent().width() !== parentdWidth) {
-				createGrid();
-			}
-		}).trigger('resize');
+			var win = $(window).bind('resize', function() {
+				if (grid.parent().width() === 0) {
+					setTimeout(function() { win.trigger('resize'); }, 100);
+				} else if (grid.parent().width() !== parentdWidth) {
+					createGrid();
+				}
+			}).trigger('resize');
+		}
 	};
 });

@@ -17,26 +17,18 @@ define([
 					gridCntlName = 'gridController',
 					app = angular.module(appName, []);
 
-				app.service('appService', function($rootScope) {
-					return {
-						fileItems: function(items) {
-							$rootScope.$broadcast('FILE_LOADED_EVENT', items);
-						}
-					};
-				});
-
 				this.div = $(params.el);
 
 				this.div.find('.jqGridContainer').attr('ng-controller', gridCntlName);
 
-				app.controller(gridCntlName, ['appService', '$rootScope', '$scope', '$http', gridController]);
+				app.controller(gridCntlName, ['$rootScope', '$http', gridController.init]);
 
-				app.run(['appService', '$rootScope', '$http', $.proxy(this.afterRender, this)]);
+				app.run(['$rootScope', '$http', $.proxy(this.afterRender, this)]);
 
 				angular.bootstrap(this.div[0], [appName]);
 			},
 
-			afterRender: function(appService, $rootScope, $http) {
+			afterRender: function($rootScope, $http) {
 				var self = this,
 					items = {},
 					count = 0,
@@ -60,14 +52,22 @@ define([
 							}
 							files.push({name: arr[1], path: option.text, data: data});
 							if (++count === filters.length - 1) { //excelude all
-								self.div.show();
-								$('body .footer').show();
-								$('div.loading').hide();
-								appService.fileItems(items);
+								self.ready($rootScope, items);
 							}
 						});
 					}
 				});
+
+				if (filters.length === 1) {
+					self.ready($rootScope, items);
+				}
+			},
+
+			ready: function(rootScope, items) {
+				this.div.show();
+				$('body .footer').show();
+				$('div.loading').hide();
+				gridController.fileItems(rootScope, items);
 			},
 
 			loadFile: function($http, path, cb) {

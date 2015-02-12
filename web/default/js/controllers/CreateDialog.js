@@ -18,7 +18,10 @@ define([
 						}
 					});
 
-					fileInput.val(copyFrom.val().split('/')[1].replace('.json', ''));
+					if (copyFrom.val() !== 'none') {
+						fileInput.val(copyFrom.val().split('/')[1].replace('.json', ''));
+					}
+
 					copyFrom.change(function() {
 						if (this.value !== 'none') {
 							fileInput.val(this.value.split('/')[1].replace('.json', ''));
