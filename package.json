@@ -1,6 +1,6 @@
 {
   "name": "indigo-locale",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Localization tool based on indigoJS framework",
   "main": "index.js",
   "scripts": {
