@@ -19,6 +19,6 @@ module.exports = {
 		locales.config(appconf);
 
 		indigo.app.use(global.__routerBase, express.static(__dirname + appconf.get('server:webdir')));
-		indigo.libs('routers').init(appconf, null, null, locales);
+		require('indigojs').libs('routers').init(appconf, null, null, locales);
 	}
 };

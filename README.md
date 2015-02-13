@@ -12,7 +12,7 @@
 
 ```
 "devDependencies": {
-	"indigo-locale": "~0.1.4"
+	"indigo-locale": "~0.1.6"
 }
 ```
 
