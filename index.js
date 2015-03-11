@@ -1,7 +1,7 @@
 'use strict';
 
 var indigo = global.__indigo,
-	express = require('express');
+	moduleDir = '/node_modules/indigo-locale';
 
 global.__routerBase = '/indigo-locale';
 
@@ -13,12 +13,16 @@ if (!indigo) {
 module.exports = {
 	init: function() {
 		var appconf = indigo.getAppConf(__dirname + '/config/app.json');
-		appconf.server.moduleDir = '/node_modules/indigo-locale';
+		appconf.server.moduleDir = moduleDir;
 
 		var locales = require('indigojs').libs('locales');
 		locales.config(appconf);
 
-		indigo.app.use(global.__routerBase, express.static(__dirname + appconf.get('server:webdir')));
+		indigo.static(global.__routerBase, __dirname + appconf.get('server:webdir'));
 		require('indigojs').libs('routers').init(appconf, null, null, locales);
 	}
 };
+
+
+//moduleDir = '';
+//module.exports.init();

@@ -12,7 +12,7 @@
 
 ```
 "devDependencies": {
-	"indigo-locale": "~0.1.6"
+	"indigo-locale": "~0.1.7"
 }
 ```
 
@@ -44,4 +44,4 @@ Example:
 http://localhost:8125/indigo-locale/index
 ```
 
-![Screenshot](https://raw.githubusercontent.com/dgofman/indigo-locale/master/web/images/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/dgofman/indigo-locale/master/web/static/images/screenshot.png)

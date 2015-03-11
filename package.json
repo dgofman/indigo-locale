@@ -1,6 +1,6 @@
 {
   "name": "indigo-locale",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Localization tool based on indigoJS framework",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "indigo": "git://github.com/dgofman/indigojs.git#master",
-    "express": "~4.11.0"
+    "less": "~2.4.0"
   },
   "devDependencies": {
     "jshint": "~2.6.0"
