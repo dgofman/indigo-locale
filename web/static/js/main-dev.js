@@ -1,7 +1,7 @@
 'use strict';
 
 require.config({
-	baseUrl: '/static/js',
+	baseUrl: '/indigo-locale/static/js',
 
 	paths: {
 		jquery: 'vendor/jquery-2.1.1',
